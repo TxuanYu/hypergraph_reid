@@ -41,7 +41,7 @@ parser.add_argument('--max-epoch', default=800, type=int,
                     help="maximum epochs to run")
 parser.add_argument('--start-epoch', default=0, type=int,
                     help="manual epoch number (useful on restarts)")
-parser.add_argument('--train-batch', default=32, type=int,
+parser.add_argument('--train-batch', default=2, type=int,
                     help="train batch size")
 parser.add_argument('--test-batch', default=1, type=int, help="has to be 1")
 parser.add_argument('--lr', '--learning-rate', default=0.0003, type=float,
@@ -60,19 +60,19 @@ parser.add_argument('--htri-only', action='store_true', default=False,
 parser.add_argument('--xent-only', action='store_true', default=False,
                     help="if this is True, only xent loss is used in training")
 # Architecture
-parser.add_argument('-a', '--arch', type=str, default='resnet50tp', help="resnet503d, resnet50tp, resnet50ta, resnetrnn")
+parser.add_argument('-a', '--arch', type=str, default='resnet50graphpoolparthyper', help="resnet503d, resnet50tp, resnet50ta, resnetrnn")
 parser.add_argument('--pool', type=str, default='avg', choices=['avg', 'max'])
 
 # Miscs
 parser.add_argument('--print-freq', type=int, default=80, help="print frequency")
 parser.add_argument('--seed', type=int, default=1, help="manual seed")
-parser.add_argument('--pretrained-model', type=str, default='/home/jiyang/Workspace/Works/video-person-reid/3dconv-person-reid/pretrained_models/resnet-50-kinetics.pth', help='need to be set for resnet3d models')
-parser.add_argument('--evaluate', action='store_true', help="evaluation only")
+parser.add_argument('--pretrained-model', type=str, default='checkpoint_ep325.pth.tar', help='need to be set for resnet3d models')
+parser.add_argument('--evaluate', action='store_false', help="evaluation only")
 parser.add_argument('--eval-step', type=int, default=50,
                     help="run evaluation for every N epochs (set to -1 to test after training)")
 parser.add_argument('--save-dir', type=str, default='log')
 parser.add_argument('--use-cpu', action='store_true', help="use cpu")
-parser.add_argument('--gpu-devices', default='0,1', type=str, help='gpu device ids for CUDA_VISIBLE_DEVICES')
+parser.add_argument('--gpu-devices', default='0', type=str, help='gpu device ids for CUDA_VISIBLE_DEVICES')
 
 parser.add_argument('--dropout', default=0.1, type=float, help='dropout ratio for GAT')
 parser.add_argument('--nhid', default=512, type=int, help='hidden dimension of GAT')
@@ -121,7 +121,8 @@ def main():
         T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
-    pin_memory = True if use_gpu else False
+    # pin_memory = True if use_gpu else False
+    pin_memory = False
 
     if args.xent_only:
         trainloader = DataLoader(
@@ -286,6 +287,7 @@ def test(model, queryloader, galleryloader, pool, use_gpu, ranks=[1, 5, 10, 20])
         for batch_idx, (imgs, pids, camids) in enumerate(queryloader):
             if use_gpu:
                 imgs = imgs.cuda()
+            torch.cuda.empty_cache()
             imgs = Variable(imgs)
             # b=1, n=number of clips, s=16
             b, n, s, c, h, w = imgs.size()

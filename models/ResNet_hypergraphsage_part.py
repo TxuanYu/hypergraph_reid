@@ -8,7 +8,7 @@ import torchvision
 from .convlstm import ConvLSTM
 import math
 import random
-from .resnet import ResNet, BasicBlock, Bottleneck, ResNetNonLocal
+from .resnet1 import ResNet, BasicBlock, Bottleneck, ResNetNonLocal
 from .utils import build_adj_full_full, build_adj_full_d
 __all__ = ['ResNet50GRAPHPOOLPARTHyper']
 

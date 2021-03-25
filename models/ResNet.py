@@ -8,7 +8,7 @@ import torchvision
 from .convlstm import ConvLSTM
 import math
 __all__ = ['ResNet50TP', 'ResNet50TPICA', 'ResNet50TA', 'ResNet50RNN', 'ResNet50CONVRNN', 'ResNet50GRU', 'ResNet50TPNEW', 'ResNet50TPPART']
-from .resnet import ResNet, BasicBlock, Bottleneck, ResNetNonLocal
+from .resnet1 import ResNet, BasicBlock, Bottleneck, ResNetNonLocal
 
 class ResNet50TP(nn.Module):
     def __init__(self, num_classes, loss={'xent'}, **kwargs):
