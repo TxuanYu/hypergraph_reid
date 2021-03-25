@@ -540,7 +540,7 @@ class ResNet50GRAPHPOOLPARTHyper(nn.Module):
         self.base = ResNetNonLocal(last_stride=1,
                                block=Bottleneck,
                                layers=[3, 4, 6, 3])
-        self.base.load_param('/home/ubuntu/.torch/models/resnet50-19c8e357.pth')
+        self.base.load_param('resnet50-19c8e357.pth')
         
 
         self.layers1 = nn.ModuleList([
